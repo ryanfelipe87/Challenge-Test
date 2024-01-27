@@ -1,13 +1,15 @@
 package com.org.ecm.challengetest.models;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,26 +22,35 @@ public class Filme {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @NotBlank
+    @Column(unique = true)
     private String codigo;
 
+    @NotBlank
     @Column
     private String nome;
 
+    @NotBlank
     @Column
     private String sinopse;
 
+    @Positive
+    @NotNull
     @Column
-    private int anoLancamento;
+    private Integer anoLancamento;
 
+    @NotBlank
     @Column
     private String classificacaoIndicativa;
 
+    @Positive
+    @NotNull
     @Column
-    private long duracao;
+    private Long duracao;
 
-    @Column
-    private boolean disponibilidade;
+    @NotNull
+    @Column(columnDefinition = "BOOLEAN DEFAULT false", nullable = false)
+    private Boolean disponibilidade;
 
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -48,5 +59,5 @@ public class Filme {
             joinColumns = @JoinColumn(name = "filme_id"),
             inverseJoinColumns = @JoinColumn(name = "genero_id")
     )
-    private Set<Genero> generos = new HashSet<>();
+    private List<Genero> generos;
 }

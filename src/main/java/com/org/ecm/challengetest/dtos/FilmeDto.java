@@ -3,6 +3,8 @@ package com.org.ecm.challengetest.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 public class FilmeDto {
@@ -15,4 +17,5 @@ public class FilmeDto {
     private String classificacaoIndicativa;
     private long duracao;
     private boolean disponibilidade;
+    private Set<GeneroDto> generos;
 }
