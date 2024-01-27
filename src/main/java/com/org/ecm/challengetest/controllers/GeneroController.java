@@ -24,12 +24,12 @@ public class GeneroController {
         return generoService.listarTodosGeneros();
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public GeneroDto atualizar(@PathVariable Long id, @RequestBody GeneroDto generoDto){
         return generoService.atualizarGenero(id, generoDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     void deletar(@PathVariable Long id){
         generoService.deletarGenero(id);
     }
