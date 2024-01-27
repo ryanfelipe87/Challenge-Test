@@ -6,9 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Getter
@@ -22,33 +19,24 @@ public class Filme {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
     @Column(unique = true)
     private String codigo;
 
-    @NotBlank
     @Column
     private String nome;
 
-    @NotBlank
     @Column
     private String sinopse;
 
-    @Positive
-    @NotNull
     @Column
     private Integer anoLancamento;
 
-    @NotBlank
     @Column
     private String classificacaoIndicativa;
 
-    @Positive
-    @NotNull
     @Column
     private Long duracao;
 
-    @NotNull
     @Column(columnDefinition = "BOOLEAN DEFAULT false", nullable = false)
     private Boolean disponibilidade;
 
