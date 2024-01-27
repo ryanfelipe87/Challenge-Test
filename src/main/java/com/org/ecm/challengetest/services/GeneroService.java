@@ -3,6 +3,7 @@ package com.org.ecm.challengetest.services;
 import com.org.ecm.challengetest.dtos.GeneroDto;
 import com.org.ecm.challengetest.models.Genero;
 import com.org.ecm.challengetest.repositories.GeneroRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,9 @@ public class GeneroService {
     @Autowired
     private GeneroRepository generoRepository;
 
-    public GeneroDto criarGenero(GeneroDto generoDto){
-        Genero genero = new Genero();
-        genero.setNome(generoDto.getNome());
-
+    public GeneroDto cadastrarGenero(GeneroDto generoDto){
+        Genero genero = convertToEntity(generoDto);
         genero = generoRepository.save(genero);
-
         return convertToDto(genero);
     }
 
@@ -34,10 +32,8 @@ public class GeneroService {
 
     public GeneroDto atualizarGenero(Long id, GeneroDto generoDto){
         Optional<Genero> generoOptional = generoRepository.findById(id);
-        if(generoOptional.isPresent()){
-            Genero genero = generoOptional.get();
-            genero.setNome(generoDto.getNome());
-
+        if(generoOptional.isPresent() && id.equals(generoDto.getId())){
+            Genero genero = convertToEntity(generoDto);
             genero = generoRepository.save(genero);
 
             return convertToDto(genero);
@@ -51,7 +47,17 @@ public class GeneroService {
 
     private GeneroDto convertToDto(Genero genero){
         GeneroDto generoDto = new GeneroDto();
-        generoDto.setNome(genero.getNome());
+        BeanUtils.copyProperties(genero, generoDto);
         return generoDto;
+    }
+
+    private Genero convertToEntity(GeneroDto generoDto){
+        Genero genero = new Genero();
+        BeanUtils.copyProperties(generoDto, genero);
+        return genero;
+    }
+
+    public Genero buscarPorNome(String nomeGenero) {
+        return generoRepository.findByNome(nomeGenero);
     }
 }

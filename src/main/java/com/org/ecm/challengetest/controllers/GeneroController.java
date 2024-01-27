@@ -13,7 +13,7 @@ import java.util.List;
 
 @Tag(name = "genero")
 @RestController
-@RequestMapping(path = "/api/genero")
+@RequestMapping(path = "/genero")
 public class GeneroController {
 
     @Autowired
@@ -29,8 +29,8 @@ public class GeneroController {
             @ApiResponse(responseCode = "404", description = "Não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro no servidor não identificado")
     })
-    public GeneroDto criar(@RequestBody GeneroDto generoDto){
-        return generoService.criarGenero(generoDto);
+    public GeneroDto cadastrar(@RequestBody GeneroDto generoDto){
+        return generoService.cadastrarGenero(generoDto);
     }
 
     @GetMapping
