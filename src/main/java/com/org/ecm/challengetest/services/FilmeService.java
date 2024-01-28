@@ -3,6 +3,9 @@ package com.org.ecm.challengetest.services;
 import com.org.ecm.challengetest.dtos.FilmeDto;
 import com.org.ecm.challengetest.dtos.GeneroDto;
 import com.org.ecm.challengetest.enums.ClassificacaoIndicativa;
+import com.org.ecm.challengetest.exceptions.BadRequestException;
+import com.org.ecm.challengetest.exceptions.InternalServerErrorException;
+import com.org.ecm.challengetest.exceptions.NotFoundException;
 import com.org.ecm.challengetest.models.Filme;
 import com.org.ecm.challengetest.models.Genero;
 import com.org.ecm.challengetest.repositories.FilmeRepository;
@@ -34,11 +37,11 @@ public class FilmeService {
     private void validarCodigo(FilmeDto filmeDto) {
         String regex = "^[A-Z]{3}-[0-9]{3}(?<!000)$";
         if(!Pattern.matches(regex, filmeDto.getCodigo()))
-            throw new IllegalArgumentException("O código do filme não está no formato válido");//400
+            throw new BadRequestException("O código do filme não está no formato válido");
 
         Filme filmeResponse = filmeRepository.findByCodigo(filmeDto.getCodigo());
         if(filmeResponse != null)
-            throw new IllegalArgumentException("Genero existente com esse Id: " + filmeDto.getCodigo());
+            throw new BadRequestException("Filme já existente com esse código: " + filmeDto.getCodigo());
     }
 
     public FilmeDto atualizarFilme(FilmeDto filmeDto){
@@ -48,7 +51,7 @@ public class FilmeService {
             filme = filmeRepository.save(filme);
             return convertToDto(filme);
         }
-        return null;
+        throw new InternalServerErrorException("Filme não está disponível para atualização");
     }
 
     public void deletarFilme(Long id){
@@ -118,7 +121,7 @@ public class FilmeService {
 
     private void validarAnoLancamento(Integer anoLancamento){
         if(anoLancamento < 1900 || anoLancamento > LocalDate.now().getYear() || anoLancamento.toString().length() > 4){
-            throw new IllegalArgumentException("Ano de lançamento inválido " + anoLancamento);
+            throw new BadRequestException("Ano de lançamento inválido " + anoLancamento);
         }
     }
 }

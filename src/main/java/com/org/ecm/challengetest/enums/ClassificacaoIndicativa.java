@@ -1,5 +1,7 @@
 package com.org.ecm.challengetest.enums;
 
+import com.org.ecm.challengetest.exceptions.BadRequestException;
+
 public enum ClassificacaoIndicativa {
 
     LIVRE("L", "Classificação Livre"),
@@ -31,6 +33,6 @@ public enum ClassificacaoIndicativa {
                 return value;
             }
         }
-        throw new IllegalArgumentException("Código de classificação indicativa inválido: " + codigo);
+        throw new BadRequestException("Código de classificação indicativa inválido: " + codigo);
     }
 }

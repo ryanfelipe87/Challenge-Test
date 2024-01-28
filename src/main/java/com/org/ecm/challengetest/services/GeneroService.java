@@ -1,6 +1,8 @@
 package com.org.ecm.challengetest.services;
 
 import com.org.ecm.challengetest.dtos.GeneroDto;
+import com.org.ecm.challengetest.exceptions.BadRequestException;
+import com.org.ecm.challengetest.exceptions.NotFoundException;
 import com.org.ecm.challengetest.models.Genero;
 import com.org.ecm.challengetest.repositories.GeneroRepository;
 import org.springframework.beans.BeanUtils;
@@ -20,7 +22,7 @@ public class GeneroService {
     public GeneroDto cadastrarGenero(GeneroDto generoDto){
         Genero generoResponse = generoRepository.findByNome(generoDto.getNome());
         if(generoResponse != null)
-            throw new IllegalArgumentException("Genero existente com esse Id: " + generoDto.getNome());
+            throw new BadRequestException("Genero existente com esse nome: " + generoDto.getNome());
 
         Genero genero = convertToEntity(generoDto);
         genero = generoRepository.save(genero);
@@ -42,7 +44,7 @@ public class GeneroService {
 
             return convertToDto(genero);
         }
-        return null;
+        throw new NotFoundException("Genero indisponível para atualização");
     }
 
     public void deletarGenero(Long id){
