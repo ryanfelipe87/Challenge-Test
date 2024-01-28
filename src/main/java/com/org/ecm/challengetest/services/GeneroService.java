@@ -18,6 +18,10 @@ public class GeneroService {
     private GeneroRepository generoRepository;
 
     public GeneroDto cadastrarGenero(GeneroDto generoDto){
+        Genero generoResponse = generoRepository.findByNome(generoDto.getNome());
+        if(generoResponse != null)
+            throw new IllegalArgumentException("Genero existente com esse Id: " + generoDto.getNome());
+
         Genero genero = convertToEntity(generoDto);
         genero = generoRepository.save(genero);
         return convertToDto(genero);
@@ -30,9 +34,9 @@ public class GeneroService {
                 .collect(Collectors.toList());
     }
 
-    public GeneroDto atualizarGenero(Long id, GeneroDto generoDto){
-        Optional<Genero> generoOptional = generoRepository.findById(id);
-        if(generoOptional.isPresent() && id.equals(generoDto.getId())){
+    public GeneroDto atualizarGenero(GeneroDto generoDto){
+        Optional<Genero> generoOptional = generoRepository.findById(generoDto.getId());
+        if(generoOptional.isPresent()){
             Genero genero = convertToEntity(generoDto);
             genero = generoRepository.save(genero);
 
