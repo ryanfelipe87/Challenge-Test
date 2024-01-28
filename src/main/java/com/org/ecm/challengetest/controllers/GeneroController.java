@@ -47,7 +47,7 @@ public class GeneroController {
         return generoService.listarTodosGeneros();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @Operation(
             summary = "Atualizar um genero",
             description = "Controller para Genero"
@@ -57,8 +57,8 @@ public class GeneroController {
             @ApiResponse(responseCode = "404", description = "Não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro no servidor não identificado")
     })
-    public GeneroDto atualizar(@PathVariable Long id, @RequestBody GeneroDto generoDto){
-        return generoService.atualizarGenero(id, generoDto);
+    public GeneroDto atualizar(@RequestBody GeneroDto generoDto){
+        return generoService.atualizarGenero(generoDto);
     }
 
     @DeleteMapping("/{id}")
