@@ -2,6 +2,7 @@ package com.org.ecm.challengetest.services;
 
 import com.org.ecm.challengetest.dtos.FilmeDto;
 import com.org.ecm.challengetest.dtos.GeneroDto;
+import com.org.ecm.challengetest.enums.ClassificacaoIndicativa;
 import com.org.ecm.challengetest.models.Filme;
 import com.org.ecm.challengetest.models.Genero;
 import com.org.ecm.challengetest.repositories.FilmeRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -23,30 +25,21 @@ public class FilmeService {
     private FilmeRepository filmeRepository;
 
     public FilmeDto criarFilme(FilmeDto filmeDto){
-        String regex = "^[A-Z]{3}-[0-9]{3}(?<!000)$";
-        if(!Pattern.matches(regex, filmeDto.getCodigo()))
-            throw new IllegalArgumentException("O código do filme não está no formato válido");//400
-
+        validarCodigo(filmeDto);
         Filme filme = convertToEntity(filmeDto);
         filme = filmeRepository.save(filme);
         return convertToDto(filme);
     }
 
-//    public FilmeDto listarFilmePorNome(FilmeDto filmeDto){
-//        Filme filme = filmeRepository.findByNome(filmeDto.getNome());
-//        if(filme != null){
-//            return convertToDto(filme);
-//        }
-//        return null;
-//    }
-//
-//    public List<FilmeDto> listarFilmePorGenero(Genero genero){
-//        return filmeRepository.findByGeneros(genero);
-//    }
-//
-//    public List<FilmeDto> ListarFilmeIndisponivel(FilmeDto filmeDto){
-//        return filmeRepository.buscarFilmesSemDisponibilidade();
-//    }
+    private void validarCodigo(FilmeDto filmeDto) {
+        String regex = "^[A-Z]{3}-[0-9]{3}(?<!000)$";
+        if(!Pattern.matches(regex, filmeDto.getCodigo()))
+            throw new IllegalArgumentException("O código do filme não está no formato válido");//400
+
+        Filme filmeResponse = filmeRepository.findByCodigo(filmeDto.getCodigo());
+        if(filmeResponse != null)
+            throw new IllegalArgumentException("Genero existente com esse Id: " + filmeDto.getCodigo());
+    }
 
     public FilmeDto atualizarFilme(FilmeDto filmeDto){
         Optional<Filme> filmeOptional = filmeRepository.findById(filmeDto.getId());
@@ -58,14 +51,18 @@ public class FilmeService {
         return null;
     }
 
-    public void deletarFilme(String codigo){
-        filmeRepository.deleteByCodigo(codigo);
+    public void deletarFilme(Long id){
+        Optional<Filme> filmeOptional = filmeRepository.findById(id);
+        if(filmeOptional.isPresent()){
+            filmeRepository.deleteById(id);
+        }
     }
 
     private FilmeDto convertToDto(Filme filme){
         FilmeDto filmeDto = new FilmeDto();
         BeanUtils.copyProperties(filme, filmeDto);
         setGeneroNoFilmeDto(filme, filmeDto);
+        filmeDto.setClassificacaoIndicativa(filme.getClassificacaoIndicativa().getCodigo());
         return filmeDto;
     }
 
@@ -80,18 +77,48 @@ public class FilmeService {
     }
 
     private Filme convertToEntity(FilmeDto filmeDto){
+        validarAnoLancamento(filmeDto.getAnoLancamento());
         Filme filme = new Filme();
         BeanUtils.copyProperties(filmeDto, filme);
         setGenerosNoFilme(filmeDto, filme);
+        ClassificacaoIndicativa classificacaoIndicativa = ClassificacaoIndicativa.getByCodigo(filmeDto.getClassificacaoIndicativa());
+        filme.setClassificacaoIndicativa(classificacaoIndicativa);
         return filme;
     }
 
     private void setGenerosNoFilme(FilmeDto filmeDto, Filme filme) {
-        List<Genero> generos = new ArrayList<>();
+        Set<Genero> generos = new HashSet<>();
         for (GeneroDto generoDto : filmeDto.getGeneros()) {
             Genero genero = generoService.buscarPorNome(generoDto.getNome());
             generos.add(genero);
         }
-        filme.setGeneros(generos);
+        filme.setGeneros(new ArrayList<>(generos));
+    }
+
+    public List<FilmeDto> filtrarFilmePorNome(String nome) {
+        List<Filme> filmes = filmeRepository.findByNomeContaining(nome);
+        return filmes.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<FilmeDto> filtroDisponiveisPorGenero(String nomeGenero) {
+        List<Filme> filmes = filmeRepository.findByGenerosNomeAndDisponibilidade(nomeGenero, true);
+        return filmes.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<FilmeDto> filtroTodosIndisponiveis() {
+        List<Filme> filmes = filmeRepository.findByDisponibilidade(false);
+        return filmes.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private void validarAnoLancamento(Integer anoLancamento){
+        if(anoLancamento < 1900 || anoLancamento > LocalDate.now().getYear() || anoLancamento.toString().length() > 4){
+            throw new IllegalArgumentException("Ano de lançamento inválido " + anoLancamento);
+        }
     }
 }
