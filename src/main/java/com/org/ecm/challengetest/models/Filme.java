@@ -1,5 +1,6 @@
 package com.org.ecm.challengetest.models;
 
+import com.org.ecm.challengetest.enums.ClassificacaoIndicativa;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,22 +20,23 @@ public class Filme {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String codigo;
 
-    @Column
+    @Column(nullable = false)
     private String nome;
 
-    @Column
+    @Column(nullable = false)
     private String sinopse;
 
-    @Column
+    @Column(nullable = false)
     private Integer anoLancamento;
 
-    @Column
-    private String classificacaoIndicativa;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ClassificacaoIndicativa classificacaoIndicativa;
 
-    @Column
+    @Column(nullable = false)
     private Long duracao;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false", nullable = false)

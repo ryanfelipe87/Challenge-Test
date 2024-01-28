@@ -3,6 +3,10 @@ package com.org.ecm.challengetest.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.Set;
 
 @Getter
@@ -10,12 +14,30 @@ import java.util.Set;
 public class FilmeDto {
 
     private Long id;
+
+    @NotBlank
     private String codigo;
+
+    @NotBlank
     private String nome;
+
+    @NotBlank
     private String sinopse;
-    private int anoLancamento;
+
+    @NotNull
+    @Positive
+    private Integer anoLancamento;
+
+    @NotBlank
     private String classificacaoIndicativa;
-    private long duracao;
-    private boolean disponibilidade;
+
+    @Positive
+    @NotNull
+    private Long duracao;
+
+    @NotNull
+    private Boolean disponibilidade;
+
+    @NotNull
     private Set<GeneroDto> generos;
 }
