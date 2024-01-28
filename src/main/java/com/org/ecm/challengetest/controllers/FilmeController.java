@@ -5,6 +5,8 @@ import com.org.ecm.challengetest.services.FilmeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/filme")
 public class FilmeController {
@@ -17,23 +19,28 @@ public class FilmeController {
         return filmeService.criarFilme(filmeDto);
     }
 
-//    @GetMapping(path = "/byNome")
-//    public List<FilmeDto> listFilmePorNome(FilmeDto filmeDto){
-//        return (List<FilmeDto>) filmeService.listarFilmePorNome(filmeDto);
-//    }
-//
-//    @GetMapping(path = "/byGenero")
-//    public List<FilmeDto> listarPorGenero(Genero genero){
-//        return filmeService.listarFilmePorGenero(genero);
-//    }
+    @GetMapping(path = "/filtroPorNome/{nome}")
+    public List<FilmeDto> listFilmePorNome(@PathVariable String nome){
+        return filmeService.filtrarFilmePorNome(nome);
+    }
+
+    @GetMapping(path = "/filtroDisponiveisPorGenero/{nomeGenero}")
+    public List<FilmeDto> filtroDisponiveisPorGenero(@PathVariable String nomeGenero){
+        return filmeService.filtroDisponiveisPorGenero(nomeGenero);
+    }
+
+    @GetMapping(path = "/filtroTodosIndisponiveis")
+    public List<FilmeDto> filtroTodosIndisponiveis(){
+        return filmeService.filtroTodosIndisponiveis();
+    }
 
     @PutMapping
     public FilmeDto atualizar(@RequestBody FilmeDto filmeDto){
         return filmeService.atualizarFilme(filmeDto);
     }
 
-    @DeleteMapping("/{codigo}")
-    void deletar(@PathVariable String codigo){
-        filmeService.deletarFilme(codigo);
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id){
+        filmeService.deletarFilme(id);
     }
 }
