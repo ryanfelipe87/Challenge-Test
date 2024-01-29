@@ -4,6 +4,7 @@ import com.org.ecm.challengetest.dtos.FilmeDto;
 import com.org.ecm.challengetest.services.FilmeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,11 @@ public class FilmeController {
     )
     public FilmeDto createFilme(@RequestBody FilmeDto filmeDto){
         return filmeService.criarFilme(filmeDto);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<String> home(){
+        return ResponseEntity.ok("Hello World");
     }
 
     @GetMapping(path = "/filtroPorNome/{nome}")
