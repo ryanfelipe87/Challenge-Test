@@ -66,7 +66,7 @@ public class FilmeController {
         return filmeService.atualizarFilme(filmeDto);
     }
 
-    @DeleteMapping("/deletar/{id}")
+    @DeleteMapping( "/deletar/{id}" )
     @Operation(
             summary = "Deletar um filme",
             description = "Controller para endpoint Filme"
