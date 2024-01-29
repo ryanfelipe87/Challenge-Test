@@ -30,30 +30,30 @@ public class FilmeController {
         return ResponseEntity.ok("Hello World");
     }
 
-    @GetMapping(path = "/filtroPorNome/{nome}")
+    @GetMapping(path = "/filtrar-por-nome/{nome}")
     @Operation(
             summary = "Listar filmes por nome",
             description = "Controller para endpoint Filme"
     )
-    public List<FilmeDto> listFilmePorNome(@PathVariable String nome){
+    public List<FilmeDto> listarFilmesPorNome(@PathVariable String nome){
         return filmeService.filtrarFilmePorNome(nome);
     }
 
-    @GetMapping(path = "/filtroDisponiveisPorGenero/{nomeGenero}")
+    @GetMapping(path = "/filtrar-disponiveis-por-genero/{nomeGenero}")
     @Operation(
             summary = "Listar filmes disponíveis por genero",
             description = "Controller para endpoint Filme"
     )
-    public List<FilmeDto> filtroDisponiveisPorGenero(@PathVariable String nomeGenero){
+    public List<FilmeDto> listarDisponiveisPorGenero(@PathVariable String nomeGenero){
         return filmeService.filtroDisponiveisPorGenero(nomeGenero);
     }
 
-    @GetMapping(path = "/filtroTodosIndisponiveis")
+    @GetMapping(path = "/filtrar-todos-indisponiveis")
     @Operation(
             summary = "Listar filmes indisponíveis",
             description = "Controller para endpoint Filme"
     )
-    public List<FilmeDto> filtroTodosIndisponiveis(){
+    public List<FilmeDto> listarTodosIndisponiveis(){
         return filmeService.filtroTodosIndisponiveis();
     }
 
@@ -62,7 +62,7 @@ public class FilmeController {
             summary = "Atualizar filme",
             description = "Controller para endpoint Filme"
     )
-    public FilmeDto atualizar(@RequestBody FilmeDto filmeDto){
+    public FilmeDto atualizarFilme(@RequestBody FilmeDto filmeDto){
         return filmeService.atualizarFilme(filmeDto);
     }
 
@@ -71,7 +71,7 @@ public class FilmeController {
             summary = "Deletar um filme",
             description = "Controller para endpoint Filme"
     )
-    public void deletar(@PathVariable Long id){
+    public void deletarFilme(@PathVariable Long id){
         filmeService.deletarFilme(id);
     }
 }

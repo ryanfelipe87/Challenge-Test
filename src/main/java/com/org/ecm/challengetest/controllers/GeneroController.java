@@ -20,7 +20,7 @@ public class GeneroController {
             summary = "Criar um novo genero",
             description = "Controller para Genero"
     )
-    public GeneroDto cadastrar(@RequestBody GeneroDto generoDto){
+    public GeneroDto cadastrarGenero(@RequestBody GeneroDto generoDto){
         return generoService.cadastrarGenero(generoDto);
     }
 
@@ -29,7 +29,7 @@ public class GeneroController {
             summary = "Listar todos os generos",
             description = "Controller para Genero"
     )
-    public List<GeneroDto> listaTodos(){
+    public List<GeneroDto> listarTodosGeneros(){
         return generoService.listarTodosGeneros();
     }
 
@@ -38,7 +38,7 @@ public class GeneroController {
             summary = "Atualizar um genero",
             description = "Controller para Genero"
     )
-    public GeneroDto atualizar(@RequestBody GeneroDto generoDto){
+    public GeneroDto atualizarGenero(@RequestBody GeneroDto generoDto){
         return generoService.atualizarGenero(generoDto);
     }
 
@@ -47,7 +47,7 @@ public class GeneroController {
             summary = "Deletar um genero",
             description = "Controller para Genero"
     )
-    void deletar(@PathVariable Long id){
+    void deletarGenero(@PathVariable Long id){
         generoService.deletarGenero(id);
     }
 }
