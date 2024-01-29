@@ -42,7 +42,7 @@ public class GeneroController {
         return generoService.atualizarGenero(generoDto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     @Operation(
             summary = "Deletar um genero",
             description = "Controller para Genero"
